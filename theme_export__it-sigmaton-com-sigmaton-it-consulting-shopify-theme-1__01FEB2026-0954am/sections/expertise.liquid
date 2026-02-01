@@ -1,0 +1,35 @@
+<section class="section" id="expertise">
+  <div class="container">
+    <div class="grid two" style="align-items:start;">
+      <div>
+        <div class="eyebrow">{{ section.settings.eyebrow }}</div>
+        <h2 class="h2">{{ section.settings.heading }}</h2>
+        <p class="small" style="max-width:72ch;margin-top:12px;">{{ section.settings.body }}</p>
+        <div style="margin-top:16px;display:flex;gap:12px;flex-wrap:wrap;">
+          <a class="btn" href="{{ section.settings.cta_link }}">{{ section.settings.cta_label }}</a>
+          <a class="btn ghost" data-scroll-to="#contact" href="#contact">Contact</a>
+        </div>
+      </div>
+      <div class="grid two">
+        {% for block in section.blocks %}
+          <div class="card" style="padding:18px;">
+            <div style="font-weight:820;">{{ block.settings.title }}</div>
+            <div class="small" style="margin-top:10px;">{{ block.settings.body }}</div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+{% schema %}
+{"name":"Expertise","max_blocks":10,"settings":[
+{"type":"text","id":"eyebrow","label":"Eyebrow","default":"Approach"},
+{"type":"text","id":"heading","label":"Heading","default":"A delivery system you can trust"},
+{"type":"textarea","id":"body","label":"Body","default":"We start with a structured assessment, then deliver in sprints with clear artifacts: backlog, architecture notes, test plans, change control, and executive reporting."},
+{"type":"text","id":"cta_label","label":"CTA label","default":"See engagement models"},
+{"type":"url","id":"cta_link","label":"CTA link"}],
+"blocks":[{"type":"item","name":"Item","settings":[
+{"type":"text","id":"title","label":"Title","default":"Assessment → roadmap"},
+{"type":"textarea","id":"body","label":"Body","default":"Current-state mapping, fit-gap, and a prioritized plan with milestones."}]}],
+"presets":[{"name":"Expertise"}]}
+{% endschema %}

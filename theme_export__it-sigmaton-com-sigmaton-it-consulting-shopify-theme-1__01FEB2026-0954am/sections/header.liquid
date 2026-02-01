@@ -1,0 +1,23 @@
+<header class="site-header">
+  <div class="container">
+    <div class="header-inner">
+      <a class="brand" href="{{ routes.root_url }}">
+        <img src="{{ 'sigmaton-mark.png' | asset_url }}" alt="{{ shop.name }}">
+        <span>{{ section.settings.brand_name }}</span>
+      </a>
+      <nav class="nav" aria-label="Primary">
+        {% for link in linklists[section.settings.menu].links %}
+          <a href="{{ link.url }}">{{ link.title }}</a>
+        {% endfor %}
+      </nav>
+      <a class="btn" href="{{ section.settings.cta_link }}">{{ section.settings.cta_label }}</a>
+    </div>
+  </div>
+</header>
+{% schema %}
+{"name":"Header","settings":[
+{"type":"text","id":"brand_name","label":"Brand name","default":"Sigmaton IT"},
+{"type":"link_list","id":"menu","label":"Menu","default":"main-menu"},
+{"type":"text","id":"cta_label","label":"CTA label","default":"Book a consult"},
+{"type":"url","id":"cta_link","label":"CTA link"}]}
+{% endschema %}

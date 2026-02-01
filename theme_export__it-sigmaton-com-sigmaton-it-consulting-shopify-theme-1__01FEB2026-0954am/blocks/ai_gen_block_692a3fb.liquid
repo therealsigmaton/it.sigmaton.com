@@ -1,0 +1,453 @@
+{% doc %}
+  @prompt
+    Create a collapsible accordion section with 5 expandable items for a Services page. Each accordion item should have a clickable header that expands/collapses to show content underneath. Include smooth animations when opening and closing. The section should be titled "Services" and include 5 accordion items labeled "Service 1" through "Service 5" with editable content areas for each service description.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-accordion-container-{{ ai_gen_id }} {
+    display: block;
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    padding: 40px 20px;
+    background-color: {{ block.settings.background_color }};
+  }
+
+  .ai-accordion-title-{{ ai_gen_id }} {
+    text-align: {{ block.settings.title_alignment }};
+    font-size: {{ block.settings.title_size }}px;
+    color: {{ block.settings.title_color }};
+    margin: 0 0 30px;
+  }
+
+  .ai-accordion-items-{{ ai_gen_id }} {
+    max-width: {{ block.settings.content_width }}px;
+    margin: 0 auto;
+  }
+
+  .ai-accordion-item-{{ ai_gen_id }} {
+    border: 1px solid {{ block.settings.border_color }};
+    border-radius: {{ block.settings.border_radius }}px;
+    margin-bottom: {{ block.settings.item_spacing }}px;
+    overflow: hidden;
+    background-color: {{ block.settings.item_background }};
+  }
+
+  .ai-accordion-header-{{ ai_gen_id }} {
+    width: 100%;
+    padding: 20px 24px;
+    background-color: {{ block.settings.header_background }};
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.3s ease;
+  }
+
+  .ai-accordion-header-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.header_hover_background }};
+  }
+
+  .ai-accordion-header-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.header_font_size }}px;
+    font-weight: 600;
+    color: {{ block.settings.header_text_color }};
+    margin: 0;
+  }
+
+  .ai-accordion-icon-{{ ai_gen_id }} {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+    color: {{ block.settings.icon_color }};
+  }
+
+  .ai-accordion-item-{{ ai_gen_id }}.active .ai-accordion-icon-{{ ai_gen_id }} {
+    transform: rotate(180deg);
+  }
+
+  .ai-accordion-content-wrapper-{{ ai_gen_id }} {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+
+  .ai-accordion-content-{{ ai_gen_id }} {
+    padding: 0 24px 20px;
+    color: {{ block.settings.content_text_color }};
+    font-size: {{ block.settings.content_font_size }}px;
+    line-height: 1.6;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-accordion-container-{{ ai_gen_id }} {
+      padding: 30px 15px;
+    }
+
+    .ai-accordion-title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.title_size | times: 0.8 }}px;
+    }
+
+    .ai-accordion-header-{{ ai_gen_id }} {
+      padding: 16px 20px;
+    }
+
+    .ai-accordion-header-title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.header_font_size | times: 0.9 }}px;
+    }
+
+    .ai-accordion-content-{{ ai_gen_id }} {
+      padding: 0 20px 16px;
+      font-size: {{ block.settings.content_font_size | times: 0.9 }}px;
+    }
+  }
+{% endstyle %}
+
+<accordion-section-{{ ai_gen_id }} class="ai-accordion-container-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  {% if block.settings.section_title != blank %}
+    <h2 class="ai-accordion-title-{{ ai_gen_id }}">{{ block.settings.section_title }}</h2>
+  {% endif %}
+
+  <div class="ai-accordion-items-{{ ai_gen_id }}">
+    {% for i in (1..5) %}
+      {% liquid
+        assign title_key = 'item_' | append: i | append: '_title'
+        assign content_key = 'item_' | append: i | append: '_content'
+        assign item_title = block.settings[title_key]
+        assign item_content = block.settings[content_key]
+      %}
+
+      <div class="ai-accordion-item-{{ ai_gen_id }}" data-accordion-item="{{ i }}">
+        <button
+          class="ai-accordion-header-{{ ai_gen_id }}"
+          aria-expanded="false"
+          aria-controls="ai-accordion-content-{{ ai_gen_id }}-{{ i }}"
+        >
+          <h3 class="ai-accordion-header-title-{{ ai_gen_id }}">{{ item_title }}</h3>
+          <svg
+            class="ai-accordion-icon-{{ ai_gen_id }}"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        <div
+          class="ai-accordion-content-wrapper-{{ ai_gen_id }}"
+          id="ai-accordion-content-{{ ai_gen_id }}-{{ i }}"
+        >
+          <div class="ai-accordion-content-{{ ai_gen_id }}">
+            {{ item_content }}
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</accordion-section-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class AccordionSection{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.items = this.querySelectorAll('.ai-accordion-item-{{ ai_gen_id }}');
+        this.setupEventListeners();
+      }
+
+      setupEventListeners() {
+        this.items.forEach((item) => {
+          const header = item.querySelector('.ai-accordion-header-{{ ai_gen_id }}');
+          const contentWrapper = item.querySelector('.ai-accordion-content-wrapper-{{ ai_gen_id }}');
+          const content = item.querySelector('.ai-accordion-content-{{ ai_gen_id }}');
+
+          header.addEventListener('click', () => {
+            const isActive = item.classList.contains('active');
+
+            if (isActive) {
+              item.classList.remove('active');
+              contentWrapper.style.maxHeight = '0';
+              header.setAttribute('aria-expanded', 'false');
+            } else {
+              item.classList.add('active');
+              contentWrapper.style.maxHeight = content.scrollHeight + 'px';
+              header.setAttribute('aria-expanded', 'true');
+            }
+          });
+        });
+      }
+    }
+
+    customElements.define('accordion-section-{{ ai_gen_id }}', AccordionSection{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Services accordion",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section"
+    },
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Section title",
+      "default": "Services"
+    },
+    {
+      "type": "select",
+      "id": "title_alignment",
+      "label": "Title alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title size",
+      "min": 20,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 36
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "label": "Content max width",
+      "min": 600,
+      "max": 1200,
+      "step": 50,
+      "unit": "px",
+      "default": 800
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Accordion items"
+    },
+    {
+      "type": "range",
+      "id": "item_spacing",
+      "label": "Spacing between items",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "default": "#e0e0e0"
+    },
+    {
+      "type": "color",
+      "id": "item_background",
+      "label": "Item background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Accordion header"
+    },
+    {
+      "type": "range",
+      "id": "header_font_size",
+      "label": "Font size",
+      "min": 14,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "color",
+      "id": "header_background",
+      "label": "Background color",
+      "default": "#f9f9f9"
+    },
+    {
+      "type": "color",
+      "id": "header_hover_background",
+      "label": "Hover background color",
+      "default": "#f0f0f0"
+    },
+    {
+      "type": "color",
+      "id": "header_text_color",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Accordion content"
+    },
+    {
+      "type": "range",
+      "id": "content_font_size",
+      "label": "Font size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "content_text_color",
+      "label": "Text color",
+      "default": "#333333"
+    },
+    {
+      "type": "header",
+      "content": "Service 1"
+    },
+    {
+      "type": "text",
+      "id": "item_1_title",
+      "label": "Title",
+      "default": "Service 1"
+    },
+    {
+      "type": "richtext",
+      "id": "item_1_content",
+      "label": "Content",
+      "default": "<p>Add a description for Service 1. Explain what this service includes and how it benefits your customers.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Service 2"
+    },
+    {
+      "type": "text",
+      "id": "item_2_title",
+      "label": "Title",
+      "default": "Service 2"
+    },
+    {
+      "type": "richtext",
+      "id": "item_2_content",
+      "label": "Content",
+      "default": "<p>Add a description for Service 2. Explain what this service includes and how it benefits your customers.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Service 3"
+    },
+    {
+      "type": "text",
+      "id": "item_3_title",
+      "label": "Title",
+      "default": "Service 3"
+    },
+    {
+      "type": "richtext",
+      "id": "item_3_content",
+      "label": "Content",
+      "default": "<p>Add a description for Service 3. Explain what this service includes and how it benefits your customers.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Service 4"
+    },
+    {
+      "type": "text",
+      "id": "item_4_title",
+      "label": "Title",
+      "default": "Service 4"
+    },
+    {
+      "type": "richtext",
+      "id": "item_4_content",
+      "label": "Content",
+      "default": "<p>Add a description for Service 4. Explain what this service includes and how it benefits your customers.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Service 5"
+    },
+    {
+      "type": "text",
+      "id": "item_5_title",
+      "label": "Title",
+      "default": "Service 5"
+    },
+    {
+      "type": "richtext",
+      "id": "item_5_content",
+      "label": "Content",
+      "default": "<p>Add a description for Service 5. Explain what this service includes and how it benefits your customers.</p>"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Services accordion"
+    }
+  ]
+}
+{% endschema %}

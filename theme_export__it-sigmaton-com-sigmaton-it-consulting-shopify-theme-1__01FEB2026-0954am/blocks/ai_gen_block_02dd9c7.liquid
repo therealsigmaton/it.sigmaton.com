@@ -1,0 +1,535 @@
+{% doc %}
+  @prompt
+    Create a collapsible accordion section with 5 expandable items for a Services page. Each accordion item should have a clickable header that expands/collapses to show content underneath. Include smooth animations when opening and closing. The section should be titled "Services" and include 5 accordion items labeled "Service 1" through "Service 5" with editable content areas for each service description.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-accordion-container-{{ ai_gen_id }} {
+    display: block;
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: {{ block.settings.section_padding }}px 20px;
+  }
+
+  .ai-accordion-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.title_size }}px;
+    color: {{ block.settings.title_color }};
+    margin: 0 0 {{ block.settings.title_spacing }}px 0;
+    text-align: {{ block.settings.title_alignment }};
+  }
+
+  .ai-accordion-items-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: {{ block.settings.item_spacing }}px;
+  }
+
+  .ai-accordion-item-{{ ai_gen_id }} {
+    border: {{ block.settings.border_width }}px solid {{ block.settings.border_color }};
+    border-radius: {{ block.settings.border_radius }}px;
+    background-color: {{ block.settings.item_background }};
+    overflow: hidden;
+  }
+
+  .ai-accordion-header-{{ ai_gen_id }} {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: {{ block.settings.header_padding }}px;
+    background-color: {{ block.settings.header_background }};
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    transition: background-color 0.3s ease;
+  }
+
+  .ai-accordion-header-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.header_hover_background }};
+  }
+
+  .ai-accordion-header-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.header_font_size }}px;
+    font-weight: {{ block.settings.header_font_weight }};
+    color: {{ block.settings.header_text_color }};
+    margin: 0;
+  }
+
+  .ai-accordion-icon-{{ ai_gen_id }} {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+    color: {{ block.settings.icon_color }};
+  }
+
+  .ai-accordion-item-{{ ai_gen_id }}.active .ai-accordion-icon-{{ ai_gen_id }} {
+    transform: rotate(180deg);
+  }
+
+  .ai-accordion-content-wrapper-{{ ai_gen_id }} {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+  }
+
+  .ai-accordion-content-{{ ai_gen_id }} {
+    padding: 0 {{ block.settings.header_padding }}px {{ block.settings.content_padding }}px {{ block.settings.header_padding }}px;
+    color: {{ block.settings.content_text_color }};
+    font-size: {{ block.settings.content_font_size }}px;
+    line-height: 1.6;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-accordion-title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.title_size | times: 0.8 }}px;
+    }
+
+    .ai-accordion-header-title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.header_font_size | times: 0.9 }}px;
+    }
+
+    .ai-accordion-content-{{ ai_gen_id }} {
+      font-size: {{ block.settings.content_font_size | times: 0.9 }}px;
+    }
+  }
+{% endstyle %}
+
+<accordion-section-{{ ai_gen_id }} class="ai-accordion-container-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  {% if block.settings.section_title != blank %}
+    <h2 class="ai-accordion-title-{{ ai_gen_id }}">{{ block.settings.section_title }}</h2>
+  {% endif %}
+
+  <div class="ai-accordion-items-{{ ai_gen_id }}">
+    {% for i in (1..5) %}
+      {% liquid
+        assign item_title_key = 'item_' | append: i | append: '_title'
+        assign item_content_key = 'item_' | append: i | append: '_content'
+        assign item_open_key = 'item_' | append: i | append: '_open_default'
+        
+        assign item_title = block.settings[item_title_key]
+        assign item_content = block.settings[item_content_key]
+        assign item_open = block.settings[item_open_key]
+      %}
+
+      <div class="ai-accordion-item-{{ ai_gen_id }} {% if item_open %}active{% endif %}" data-accordion-item>
+        <button 
+          class="ai-accordion-header-{{ ai_gen_id }}"
+          aria-expanded="{% if item_open %}true{% else %}false{% endif %}"
+          data-accordion-trigger
+        >
+          <h3 class="ai-accordion-header-title-{{ ai_gen_id }}">{{ item_title }}</h3>
+          <svg class="ai-accordion-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        <div class="ai-accordion-content-wrapper-{{ ai_gen_id }}" data-accordion-content>
+          <div class="ai-accordion-content-{{ ai_gen_id }}">
+            {{ item_content }}
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</accordion-section-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class AccordionSection{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.items = this.querySelectorAll('[data-accordion-item]');
+        this.setupAccordion();
+      }
+
+      setupAccordion() {
+        this.items.forEach((item) => {
+          const trigger = item.querySelector('[data-accordion-trigger]');
+          const content = item.querySelector('[data-accordion-content]');
+          const contentInner = content.querySelector('.ai-accordion-content-{{ ai_gen_id }}');
+
+          if (item.classList.contains('active')) {
+            content.style.maxHeight = contentInner.scrollHeight + 'px';
+          }
+
+          trigger.addEventListener('click', () => {
+            const isActive = item.classList.contains('active');
+
+            if (isActive) {
+              this.closeItem(item, trigger, content);
+            } else {
+              this.openItem(item, trigger, content, contentInner);
+            }
+          });
+        });
+      }
+
+      openItem(item, trigger, content, contentInner) {
+        item.classList.add('active');
+        trigger.setAttribute('aria-expanded', 'true');
+        content.style.maxHeight = contentInner.scrollHeight + 'px';
+      }
+
+      closeItem(item, trigger, content) {
+        item.classList.remove('active');
+        trigger.setAttribute('aria-expanded', 'false');
+        content.style.maxHeight = '0';
+      }
+    }
+
+    customElements.define('accordion-section-{{ ai_gen_id }}', AccordionSection{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Services accordion",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "section_title",
+      "label": "Section title",
+      "default": "Services"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title size",
+      "min": 20,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 36
+    },
+    {
+      "type": "select",
+      "id": "title_alignment",
+      "label": "Title alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "title_spacing",
+      "label": "Title spacing",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "section_padding",
+      "label": "Section padding",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "header",
+      "content": "Accordion style"
+    },
+    {
+      "type": "range",
+      "id": "item_spacing",
+      "label": "Item spacing",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "color",
+      "id": "item_background",
+      "label": "Item background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "default": "#e0e0e0"
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "label": "Border width",
+      "min": 0,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Header style"
+    },
+    {
+      "type": "color",
+      "id": "header_background",
+      "label": "Background",
+      "default": "#f9f9f9"
+    },
+    {
+      "type": "color",
+      "id": "header_hover_background",
+      "label": "Hover background",
+      "default": "#f0f0f0"
+    },
+    {
+      "type": "color",
+      "id": "header_text_color",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "header_font_size",
+      "label": "Font size",
+      "min": 14,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "select",
+      "id": "header_font_weight",
+      "label": "Font weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi-bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "range",
+      "id": "header_padding",
+      "label": "Padding",
+      "min": 10,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Content style"
+    },
+    {
+      "type": "color",
+      "id": "content_text_color",
+      "label": "Text color",
+      "default": "#333333"
+    },
+    {
+      "type": "range",
+      "id": "content_font_size",
+      "label": "Font size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "content_padding",
+      "label": "Bottom padding",
+      "min": 10,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Service 1"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "item_1_title",
+      "label": "Title",
+      "default": "Service 1"
+    },
+    {
+      "type": "richtext",
+      "id": "item_1_content",
+      "label": "Content",
+      "default": "<p>Add a description of your service here. Explain what makes it unique and valuable to your customers.</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "item_1_open_default",
+      "label": "Open by default",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Service 2"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "item_2_title",
+      "label": "Title",
+      "default": "Service 2"
+    },
+    {
+      "type": "richtext",
+      "id": "item_2_content",
+      "label": "Content",
+      "default": "<p>Add a description of your service here. Explain what makes it unique and valuable to your customers.</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "item_2_open_default",
+      "label": "Open by default",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Service 3"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "item_3_title",
+      "label": "Title",
+      "default": "Service 3"
+    },
+    {
+      "type": "richtext",
+      "id": "item_3_content",
+      "label": "Content",
+      "default": "<p>Add a description of your service here. Explain what makes it unique and valuable to your customers.</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "item_3_open_default",
+      "label": "Open by default",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Service 4"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "item_4_title",
+      "label": "Title",
+      "default": "Service 4"
+    },
+    {
+      "type": "richtext",
+      "id": "item_4_content",
+      "label": "Content",
+      "default": "<p>Add a description of your service here. Explain what makes it unique and valuable to your customers.</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "item_4_open_default",
+      "label": "Open by default",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Service 5"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "item_5_title",
+      "label": "Title",
+      "default": "Service 5"
+    },
+    {
+      "type": "richtext",
+      "id": "item_5_content",
+      "label": "Content",
+      "default": "<p>Add a description of your service here. Explain what makes it unique and valuable to your customers.</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "item_5_open_default",
+      "label": "Open by default",
+      "default": false
+    }
+  ],
+  "presets": [
+    {
+      "name": "Services accordion"
+    }
+  ]
+}
+{% endschema %}
