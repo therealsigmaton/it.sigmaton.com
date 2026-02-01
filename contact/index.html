@@ -28,7 +28,7 @@
 
   <section class="hero" style="padding-bottom:10px;">
     <div class="kicker">Contact</div>
-    <h1>Request a quote or proposal</h1>
+    <h1>Submit Request</h1>
     <p class="lede">
       Share your objectives, timeline, and current environment. We’ll reply with a discovery plan and a proposal aligned to
       enterprise procurement—clear scope, milestones, and acceptance criteria.
@@ -37,108 +37,108 @@
 
   <section class="section" style="padding-top:0;">
     <div class="split">
+
+      <!-- FORM CARD -->
       <div class="card">
         <h2 style="margin-top:0;font-size:20px;">Request a quote</h2>
-        <p style="margin-top:0;">
-          This form opens your email client and sends your request to our Zoho inbox.
+        <p style="margin-top:0;color:rgba(11,15,23,.7)">
+          Submit the form below. It will send directly to our team (no email client required).
         </p>
 
-    
-  <input name="name" placeholder="Full name" required>
-  <input name="company" placeholder="Company / Organization">
-  <input name="email" type="email" placeholder="Work email" required>
-  <input name="phone" placeholder="Phone (optional)">
-  <input name="service" placeholder="Service of interest (e.g., IAM/PAM, NetSuite, Shopify, Apps)">
-  <textarea
-    name="message"
-    placeholder="Briefly describe scope, timeline, and current environment"
-    required></textarea>
+        <!-- IMPORTANT: keep id="quoteForm" -->
+        <form
+          id="quoteForm"
+          class="form"
+          action="https://formspree.io/f/mqelqrdr"
+          method="POST"
+        >
+          <input name="name" placeholder="Full name" required>
+          <input name="company" placeholder="Company / Organization">
+          <input name="email" type="email" placeholder="Work email" required>
+          <input name="phone" placeholder="Phone (optional)">
+          <select name="service" required>
+            <option value="" disabled selected>Service of interest</option>
+            <option>Program / PMO Leadership</option>
+            <option>Cybersecurity, IAM & PAM</option>
+            <option>ERP Integration & Migration</option>
+            <option>Shopify SSO & Integrations</option>
+            <option>Web & Mobile App Development</option>
+            <option>Integration & Delivery Assurance</option>
+          </select>
+          <textarea name="message" placeholder="Briefly describe scope, timeline, and current environment" required></textarea>
 
-  <!-- Formspree configuration -->
-  <input type="hidden" name="_subject" value="Sigmaton IT — Request for Quote">
-  <input type="hidden" name="_template" value="table">
+          <!-- Formspree helpers -->
+          <input type="hidden" name="_subject" value="Sigmaton IT — Submit Request">
+          <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
 
-  <button class="btn btn-primary" type="submit">
-    Request a quote
-  </button>
+          <button class="btn btn-primary" type="submit">Request a quote</button>
 
-  <p style="margin:0;color:rgba(11,15,23,.65);font-size:13px">
-    Your request will be sent securely to our consulting team.
-  </p>
-</form>
-<script>
-const form = document.getElementById("quoteForm");
-const success = document.getElementById("form-success");
+          <p style="margin:0;color:rgba(11,15,23,.65);font-size:13px">
+            Prefer email? <a href="mailto:support@sigmaton.com"><b>support@sigmaton.com</b></a>
+          </p>
+        </form>
 
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
+        <!-- Success + error -->
+        <div id="form-success" style="display:none;margin-top:14px;">
+          <p style="margin:0"><strong>Thank you.</strong> Your request has been submitted successfully.</p>
+          <p style="margin:8px 0 0;color:rgba(11,15,23,.7)">We typically respond within 1 business day.</p>
+        </div>
 
-  const formData = new FormData(form);
-
-  try {
-    const response = await fetch(form.action, {
-      method: "POST",
-      body: formData,
-      headers: {
-        "Accept": "application/json"
-      }
-    });
-
-    if (response.ok) {
-      form.reset();
-      form.style.display = "none";
-      success.style.display = "block";
-    } else {
-      const data = await response.json();
-      console.error("Formspree error:", data);
-      alert("Submission failed. Please try again or email support@sigmaton.com.");
-    }
-  } catch (error) {
-    console.error("Network error:", error);
-    alert("Network error. Please try again later.");
-  }
-});
-</script>
-
-<!-- Success message -->
-<div id="form-success" style="display:none;margin-top:14px;">
-  <p><strong>Thank you.</strong> Your request has been submitted successfully.</p>
-</div>
-
+        <div id="form-error" style="display:none;margin-top:14px;">
+          <p style="margin:0"><strong>We couldn’t submit your request.</strong></p>
+          <p style="margin:8px 0 0;color:rgba(11,15,23,.7)">
+            Please email <a href="mailto:support@sigmaton.com"><b>support@sigmaton.com</b></a>.
+          </p>
+          <pre id="form-error-details" style="white-space:pre-wrap;margin-top:10px;color:rgba(11,15,23,.65);font-size:12px;"></pre>
+        </div>
 
         <script>
-          const ZOHO_INBOX = "support@sigmaton.com";
+          // AJAX submit to Formspree (no redirect, no mail client)
+          const form = document.getElementById("quoteForm");
+          const success = document.getElementById("form-success");
+          const errorBox = document.getElementById("form-error");
+          const errorDetails = document.getElementById("form-error-details");
 
-          document.getElementById("quoteForm").addEventListener("submit", function (e) {
+          form.addEventListener("submit", async (e) => {
             e.preventDefault();
 
-            const data = new FormData(e.target);
+            success.style.display = "none";
+            errorBox.style.display = "none";
+            errorDetails.textContent = "";
 
-            const subject = encodeURIComponent("Sigmaton IT — Request for Quote");
-            const body = encodeURIComponent(
-`Name: ${data.get("name")}
-Company: ${data.get("company")}
-Email: ${data.get("email")}
-Phone: ${data.get("phone")}
-Service: ${data.get("service")}
+            const formData = new FormData(form);
 
-Request details:
-${data.get("message")}
+            try {
+              const res = await fetch(form.action, {
+                method: "POST",
+                body: formData,
+                headers: { "Accept": "application/json" }
+              });
 
----
-Sent from https://it.sigmaton.com`
-            );
+              if (res.ok) {
+                form.reset();
+                form.style.display = "none";
+                success.style.display = "block";
+                return;
+              }
 
-            window.location.href =
-              `mailto:${ZOHO_INBOX}?subject=${subject}&body=${body}`;
+              // Show Formspree error details (helps you debug instantly)
+              const data = await res.json().catch(() => ({}));
+              errorBox.style.display = "block";
+              errorDetails.textContent = JSON.stringify(data, null, 2) || "Unknown error";
+            } catch (err) {
+              errorBox.style.display = "block";
+              errorDetails.textContent = String(err);
+            }
           });
         </script>
       </div>
 
+      <!-- INFO CARD -->
       <div class="card">
         <h2 style="margin-top:0;font-size:20px;">What to include</h2>
         <ul class="list">
-          <li>Which service line you need (PMO, IAM/PAM, NetSuite, Shopify, Apps)</li>
+          <li>Service line (PMO, IAM/PAM, NetSuite, Shopify, Apps)</li>
           <li>Timeline and key milestones</li>
           <li>Current systems / vendors / constraints</li>
           <li>Security or compliance requirements (if applicable)</li>
@@ -153,12 +153,13 @@ Sent from https://it.sigmaton.com`
         </div>
 
         <div style="margin-top:18px;">
-          <h2 style="margin:0 0 6px;font-size:20px;">Location</h2>
+          <h2 style="margin:0 0 6px;font-size:20px;">Locations:</h2>
           <p style="margin:0;color:rgba(11,15,23,.7)">
-            UAE/GCC + US delivery (remote + onsite).
+            USA|UAE|KSA|India.
           </p>
         </div>
       </div>
+
     </div>
   </section>
 
