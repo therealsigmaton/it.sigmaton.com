@@ -7,7 +7,6 @@
   <meta name="description" content="Request a proposal for program leadership, IAM/PAM, NetSuite migration, Shopify SSO/integrations, or web/mobile app development.">
   <link rel="stylesheet" href="/assets/site.css">
   <style>
-    /* Extra styling for the embedded form container */
     .embed-wrap{
       border:1px solid rgba(11,15,23,.12);
       border-radius:18px;
@@ -19,28 +18,31 @@
       padding:16px 18px;
       border-bottom:1px solid rgba(11,15,23,.10);
       display:flex;
-      align-items:center;
+      align-items:flex-start;
       justify-content:space-between;
       gap:12px;
     }
     .embed-head h2{
       margin:0;
       font-size:20px;
+      line-height:1.2;
     }
     .embed-head p{
-      margin:0;
+      margin:6px 0 0;
       color:rgba(11,15,23,.65);
       font-size:13px;
+      line-height:1.4;
+      max-width:60ch;
     }
     .zoho-iframe{
       width:100%;
-      height:980px; /* adjust later if needed */
+      height:1020px; /* adjust if your form is longer/shorter */
       border:0;
       display:block;
       background:#fff;
     }
     @media (max-width:900px){
-      .zoho-iframe{height:1100px;}
+      .zoho-iframe{height:1180px;}
     }
   </style>
 </head>
@@ -79,20 +81,21 @@
       <div class="embed-wrap">
         <div class="embed-head">
           <div>
-            <h2>Request Information</h2>
-            <p>Submissions go directly to <b>support@sigmaton.com</b>.</p>
+            <h2>Submit a request for more information</h2>
+            <p>
+              Submit the form below. If you prefer email, contact
+              <b><a href="mailto:support@sigmaton.com">support@sigmaton.com</a></b>.
+            </p>
           </div>
           <a class="btn btn-ghost" href="mailto:support@sigmaton.com">Email instead</a>
         </div>
 
-        <!-- Replace the src URL below with your Zoho Forms iFrame embed URL -->
         <iframe
           class="zoho-iframe"
           src="https://forms.zohopublic.com/avisigm1/form/ContactTeamForm/formperma/Et5BpocA9839Du2yhdJMYoP08lCpRHOGqPRElG9gRLI"
-          title="Sigmaton IT Contact Form"
+          title="Sigmaton IT Quote Request Form"
           loading="lazy"
           referrerpolicy="no-referrer-when-downgrade"
-          allow="camera *; microphone *; geolocation *"
         ></iframe>
       </div>
 
