@@ -1,0 +1,10 @@
+:root{
+  --sig-accent:#D03A20;
+  --sig-navy:#091C53;
+}
+html, body { background:#fff !important; }
+a { color: var(--sig-navy); }
+.sig-cta{
+  background: var(--sig-accent);
+  color:#fff;
+}

@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Contact | Sigmaton IT Consulting</title>
+  <link rel="stylesheet" href="/assets/base.css">
+  <link rel="stylesheet" href="/assets/sigmaton-overrides.css">
+  <script defer src="/assets/theme.js"></script>
+  <style>
+    .sig-wrap{max-width:1100px;margin:0 auto;padding:40px 20px;}
+    .sig-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0;}
+    .sig-brand{display:flex;align-items:center;gap:10px;font-weight:700;text-decoration:none;color:#111;}
+    .sig-brand img{width:36px;height:36px;border-radius:999px;}
+    .sig-links a{margin-left:14px;text-decoration:none;color:#111;opacity:.8}
+    .sig-links a:hover{opacity:1;text-decoration:underline}
+    .sig-hero h1{font-size:44px;line-height:1.05;margin:18px 0 12px;}
+    .sig-hero p{font-size:18px;max-width:70ch;opacity:.8}
+    .sig-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:26px;}
+    .sig-card{border:1px solid rgba(0,0,0,.12);border-radius:18px;padding:18px;background:#fff;}
+    .sig-card h3{margin:0 0 10px;font-size:18px;}
+    .sig-card p{margin:0;color:rgba(0,0,0,.72);font-size:14px;line-height:1.55}
+    .sig-cta{display:inline-block;margin-top:16px;padding:12px 16px;border-radius:999px;text-decoration:none;font-weight:700}
+    .sig-cta:hover{filter:brightness(1.03)}
+    .sig-footer{margin-top:60px;padding-top:24px;border-top:1px solid rgba(0,0,0,.12);color:rgba(0,0,0,.65);font-size:13px}
+    input, textarea{width:100%;padding:12px 14px;border-radius:14px;border:1px solid rgba(0,0,0,.15);}
+    textarea{min-height:120px;}
+    @media (max-width:900px){.sig-grid{grid-template-columns:1fr} .sig-hero h1{font-size:36px} .sig-links{display:none}}
+  </style>
+</head>
+<body>
+
+
+<div class="sig-wrap">
+  <div class="sig-nav">
+    <a class="sig-brand" href="/">
+      <img src="/assets/sigmaton-mark.png" alt="Sigmaton">
+      <span>Sigmaton IT Consulting</span>
+    </a>
+    <div class="sig-links">
+      <a href="/">Home</a>
+      <a href="/services/">Services</a>
+      <a href="/about/">About</a>
+      <a href="/contact/">Contact</a>
+    </div>
+  </div>
+</div>
+
+<div class="sig-wrap">
+  <h1 style="margin-top:10px;">Contact</h1>
+  <p style="opacity:.85;max-width:80ch;">Share your objectives, timeline, and current stack. We’ll reply with a discovery plan and a proposal aligned to enterprise procurement.</p>
+  <div class="sig-card" style="max-width:680px;">
+    <h3 style="margin-top:0;">Request a proposal</h3>
+    <p style="margin-top:0;">Email: <b>hello@sigmaton.com</b></p>
+    <form onsubmit="event.preventDefault(); const n=this.name.value||''; const e=this.email.value||''; const m=this.message.value||''; const subj=encodeURIComponent('IT Consulting Inquiry'); const body=encodeURIComponent('Name: '+n+'\nEmail: '+e+'\n\n'+m); window.location.href='mailto:hello@sigmaton.com?subject='+subj+'&body='+body;">
+      <div style="display:grid;gap:12px;">
+        <input name="name" placeholder="Name" required>
+        <input name="email" type="email" placeholder="Email" required>
+        <textarea name="message" placeholder="What do you need help with?" required></textarea>
+        <button type="submit" class="sig-cta" style="border:none;cursor:pointer;">Compose email</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+</body>
+</html>
