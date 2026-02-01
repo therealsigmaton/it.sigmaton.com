@@ -1,1 +1,0 @@
-(()=>{document.addEventListener('click',(e)=>{const t=e.target; if(!t) return; const b=t.closest && t.closest('[data-scroll-to]'); if(!b) return; e.preventDefault(); const id=b.getAttribute('data-scroll-to'); const el=document.querySelector(id); if(el) el.scrollIntoView({behavior:'smooth',block:'start'});});})();
