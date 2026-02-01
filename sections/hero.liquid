@@ -1,0 +1,49 @@
+<section class="hero">
+  <div class="container">
+    <div class="grid two" style="align-items:center;">
+      <div>
+        <div class="eyebrow">{{ section.settings.eyebrow }}</div>
+        <h1>{{ section.settings.heading }}</h1>
+        <p>{{ section.settings.subheading }}</p>
+        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+          <a class="btn" href="{{ section.settings.primary_link }}">{{ section.settings.primary_label }}</a>
+          <a class="btn ghost" data-scroll-to="#services" href="#services">{{ section.settings.secondary_label }}</a>
+        </div>
+        <div class="badges">
+          {% for block in section.blocks %}
+            <span class="badge">{{ block.settings.badge }}</span>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="soft-panel" style="padding:22px;">
+        <div class="grid two">
+          <div class="kpi card" style="padding:16px;"><div class="num">{{ section.settings.kpi_1_num }}</div><div class="label">{{ section.settings.kpi_1_label }}</div></div>
+          <div class="kpi card" style="padding:16px;"><div class="num">{{ section.settings.kpi_2_num }}</div><div class="label">{{ section.settings.kpi_2_label }}</div></div>
+          <div class="kpi card" style="padding:16px;"><div class="num">{{ section.settings.kpi_3_num }}</div><div class="label">{{ section.settings.kpi_3_label }}</div></div>
+          <div class="kpi card" style="padding:16px;"><div class="num">{{ section.settings.kpi_4_num }}</div><div class="label">{{ section.settings.kpi_4_label }}</div></div>
+        <!--</div>
+        <div class="notice" style="margin-top:14px;">{{ section.settings.notice }}</div>--></div>
+      </div>
+    </div>
+  </div>
+</section>
+{% schema %}
+{"name":"Hero","max_blocks":8,"settings":[
+{"type":"text","id":"eyebrow","label":"Eyebrow","default":"Sigmaton IT Consulting"},
+{"type":"text","id":"heading","label":"Heading","default":"IT consulting that makes delivery predictable."},
+{"type":"textarea","id":"subheading","label":"Subheading","default":"We lead complex programs across cybersecurity, ERP migrations, and Shopify commerce—bringing clear roadmaps, stakeholder alignment, and hands-on execution."},
+{"type":"text","id":"primary_label","label":"Primary button label","default":"Book a discovery call"},
+{"type":"url","id":"primary_link","label":"Primary button link"},
+{"type":"text","id":"secondary_label","label":"Secondary button label","default":"Explore services"},
+{"type":"text","id":"kpi_1_num","label":"KPI 1 number","default":"10+ yrs"},
+{"type":"text","id":"kpi_1_label","label":"KPI 1 label","default":"Program delivery"},
+{"type":"text","id":"kpi_2_num","label":"KPI 2 number","default":"Cyber"},
+{"type":"text","id":"kpi_2_label","label":"KPI 2 label","default":"IAM & data protection"},
+{"type":"text","id":"kpi_3_num","label":"KPI 3 number","default":"ERP"},
+{"type":"text","id":"kpi_3_label","label":"KPI 3 label","default":"NetSuite migrations"},
+{"type":"text","id":"kpi_4_num","label":"KPI 4 number","default":"Shopify"},
+{"type":"text","id":"kpi_4_label","label":"KPI 4 label","default":"Commerce systems"},
+{"type":"textarea","id":"notice","label":"Notice","default":"Fast start: 2-week assessment → prioritized roadmap → implementation sprints."}],
+"blocks":[{"type":"badge","name":"Badge","settings":[{"type":"text","id":"badge","label":"Text","default":"NetSuite + integrations"}]}],
+"presets":[{"name":"Hero"}]}
+{% endschema %}

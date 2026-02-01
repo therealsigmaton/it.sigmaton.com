@@ -1,0 +1,42 @@
+[
+  {
+    "name": "Theme settings",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Brand"
+      },
+      {
+        "type": "image_picker",
+        "id": "logo",
+        "label": "Logo"
+      },
+      {
+        "type": "color",
+        "id": "brand_red",
+        "label": "Brand red",
+        "default": "#D03A20"
+      },
+      {
+        "type": "color",
+        "id": "brand_navy",
+        "label": "Brand navy",
+        "default": "#091C53"
+      },
+      {
+        "type": "header",
+        "content": "Layout"
+      },
+      {
+        "type": "range",
+        "id": "content_width",
+        "label": "Content width",
+        "min": 900,
+        "max": 1400,
+        "step": 20,
+        "unit": "px",
+        "default": 1140
+      }
+    ]
+  }
+]
