@@ -72,3 +72,148 @@ textarea{min-height:130px}
   .split{grid-template-columns:1fr}
   .links{display:none}
 }
+/* ===== Sigmaton IT: Chic upgrade pack ===== */
+
+/* Softer palette + glow */
+:root{
+  --sig-accent:#D03A20;
+  --sig-navy:#091C53;
+
+  --bg:#ffffff;
+  --text:#0b0f17;
+  --muted:rgba(11,15,23,.66);
+  --border:rgba(11,15,23,.10);
+
+  --shadow-sm: 0 10px 30px rgba(11,15,23,.06);
+  --shadow-md: 0 18px 60px rgba(11,15,23,.10);
+  --radius: 18px;
+}
+
+/* Subtle background texture + better smoothing */
+body{
+  background:
+    radial-gradient(900px 500px at 12% 8%, rgba(208,58,32,.08), transparent 60%),
+    radial-gradient(900px 500px at 88% 14%, rgba(9,28,83,.07), transparent 60%),
+    #fff;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+}
+
+/* Slightly bigger content rhythm */
+.section{ padding: 44px 0; }
+.hero{ padding: 72px 0 34px; }
+
+/* Buttons: more premium */
+.btn{
+  transition: transform .18s ease, box-shadow .18s ease, background-color .18s ease, border-color .18s ease;
+}
+.btn-primary{
+  box-shadow: 0 12px 30px rgba(208,58,32,.22);
+}
+.btn:hover{ transform: translateY(-1px); }
+.btn:active{ transform: translateY(0px); }
+
+/* Cards: refined look + hover */
+.card{
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  position: relative;
+  overflow: hidden;
+}
+.card::before{
+  content:"";
+  position:absolute; inset:-2px;
+  background: radial-gradient(600px 220px at 20% 0%, rgba(208,58,32,.10), transparent 50%),
+              radial-gradient(600px 220px at 80% 0%, rgba(9,28,83,.10), transparent 50%);
+  opacity:.0;
+  transition: opacity .18s ease;
+  pointer-events:none;
+}
+.card:hover{
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  border-color: rgba(11,15,23,.14);
+}
+.card:hover::before{ opacity: 1; }
+
+/* Tags: pill styling */
+.tag{
+  display:inline-flex;
+  gap:8px;
+  align-items:center;
+  font-size:12px;
+  font-weight:800;
+  padding: 7px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(11,15,23,.12);
+  background: rgba(255,255,255,.8);
+  backdrop-filter: blur(6px);
+  color: rgba(11,15,23,.72);
+}
+
+/* Hero split layout + image frame */
+.hero-split{
+  display:grid;
+  grid-template-columns: 1.15fr .85fr;
+  gap: 22px;
+  align-items: center;
+  margin-top: 18px;
+}
+.hero-frame{
+  border-radius: 22px;
+  border: 1px solid rgba(11,15,23,.10);
+  background: rgba(255,255,255,.75);
+  box-shadow: var(--shadow-md);
+  overflow:hidden;
+  position: relative;
+}
+.hero-frame img{
+  width:100%;
+  height: 420px;
+  object-fit: cover;
+  display:block;
+  filter: saturate(1.02) contrast(1.02);
+}
+.hero-frame::after{
+  content:"";
+  position:absolute; inset:0;
+  background: linear-gradient(180deg, transparent 55%, rgba(11,15,23,.25));
+  pointer-events:none;
+}
+.hero-badges{
+  position:absolute;
+  left:14px; bottom:14px;
+  display:flex; gap:10px; flex-wrap:wrap;
+}
+.badge{
+  display:inline-flex;
+  align-items:center;
+  padding:7px 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:800;
+  background: rgba(255,255,255,.86);
+  border:1px solid rgba(11,15,23,.12);
+}
+
+/* Smooth fade-in (no JS needed, but looks great) */
+@media (prefers-reduced-motion: no-preference){
+  .reveal{
+    animation: reveal .55s ease both;
+  }
+  .reveal.delay-1{ animation-delay: .08s; }
+  .reveal.delay-2{ animation-delay: .16s; }
+  .reveal.delay-3{ animation-delay: .24s; }
+  @keyframes reveal{
+    from{ opacity:0; transform: translateY(8px); }
+    to{ opacity:1; transform: translateY(0); }
+  }
+}
+
+/* Mobile */
+@media (max-width: 900px){
+  .hero-split{ grid-template-columns: 1fr; }
+  .hero-frame img{ height: 320px; }
+}
