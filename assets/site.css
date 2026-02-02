@@ -263,3 +263,34 @@ body::after{
 /* Slightly refined typography */
 h1{ letter-spacing: -0.02em; }
 .lede{ max-width: 76ch; }
+/* ===== Icon cards ===== */
+.icon-card{
+  display:flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.icon{
+  width: 40px;
+  height: 40px;
+  border-radius: 14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border: 1px solid rgba(11,15,23,.12);
+  background: rgba(255,255,255,.75);
+  box-shadow: 0 10px 22px rgba(11,15,23,.06);
+}
+
+.icon svg{
+  width: 22px;
+  height: 22px;
+  stroke: rgba(11,15,23,.82);
+}
+
+.card:hover .icon{
+  border-color: rgba(11,15,23,.16);
+  box-shadow: 0 16px 40px rgba(11,15,23,.10);
+  transform: translateY(-1px);
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
